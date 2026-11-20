@@ -1,0 +1,223 @@
+% !TeX program = lualatex
+% =====================================================================
+%  Sturm–Liouville y ecuación de Hermite — Resumen formalizado
+%  Estilo: skill «apuntes-formalizados» (apuntes-oscuro.sty, opción resumen)
+% =====================================================================
+\documentclass[10pt,a4paper]{article}
+
+\newcommand{\autor}{Daniel Martín Guerrero}
+\newcommand{\titulocorto}{Sturm--Liouville y Hermite $\cdot$ Resumen}
+
+\usepackage[resumen]{apuntes-oscuro}
+\hypersetup{pdftitle={Sturm--Liouville y ecuación de Hermite. Resumen},
+            pdfauthor={\autor}}
+
+\newcommand{\Lop}{\mathcal{L}}
+\newcommand{\Ap}{A_{+}}
+\newcommand{\Am}{A_{-}}
+
+% ---------- Figura: oscilador (amplitud 0.6 < semiespaciado: sin solapes)
+\newcommand{\curvaHermite}[3]{%
+  \addplot[name path=lvl#1, draw=none, domain=-4.4:4.4] {#1+0.5};
+  \addplot[name path=psi#1, #2, line width=0.8pt, samples=200, domain=-4.4:4.4]
+     {#1+0.5+0.6*\csname N#1\endcsname*(#3)*exp(-x^2/2)};
+  \addplot[#2, fill opacity=0.15] fill between[of=psi#1 and lvl#1];}
+\expandafter\def\csname N0\endcsname{0.75113}
+\expandafter\def\csname N1\endcsname{0.53113}
+\expandafter\def\csname N2\endcsname{0.26556}
+\expandafter\def\csname N3\endcsname{0.10842}
+\expandafter\def\csname N4\endcsname{0.03833}
+
+\begin{document}
+\thispagestyle{empty}
+\titular{Sturm--Liouville y Hermite}{Resumen}{desarrollos simbólicos}
+{\small\color{muted}\autor\hfill
+Notación: $y'\equiv\dd y/\dd x$; $\ \ip{\cdot}{\cdot}$ producto con peso; $\ \N=\{0,1,2,\dots\}$.}
+
+% =====================================================================
+\section{Separación de variables}
+% =====================================================================
+Partimos de $k(x)\,\pd_t^2y=\pd_x(u\,\pd_xy)-M\,y$ y separamos $y=X(x)T(t)$:
+\begin{equation}
+\frac{\ddot T}{T}=\frac{(uX')'-MX}{kX}\equiv-\lambda
+\;\Longrightarrow\;
+\ddot T=-\lambda T,\qquad
+\frac1k\Bigl[-(uX')'+MX\Bigr]=\lambda X .
+\end{equation}
+Hemos reducido el problema inicial a uno de autovalores. La parte temporal es inmediata:
+$T=c_\pm\,\e^{\pm\iu\omega t}$, con $\omega=\sqrt\lambda$.
+
+\begin{ejemplo}[Cuerda con extremos fijos]
+$-X''=\lambda X$, $X(0)=X(\pi)=0$. Como $\lambda\!\int X^2=\int X'^2\ge0$, sólo hay $\lambda>0$:
+\begin{gather*}
+X=A\sin\sqrt\lambda\,x\ \ (B=0),\qquad \sin\sqrt\lambda\,\pi=0
+\;\Rightarrow\;
+\res{\lambda_n=n^2,\ \ X_n=\sin nx}\\
+y=\sum_{n\ge1}(a_n\cos nt+b_n\sin nt)\sin nx .
+\end{gather*}
+\end{ejemplo}
+
+% =====================================================================
+\section{Operador de Sturm--Liouville}
+% =====================================================================
+\begin{definicion}[Operador y producto escalar]
+\begin{equation}
+\Lop y=\frac1\rho\Bigl[-(p\,y')'+q\,y\Bigr],\quad \rho,p>0;\qquad
+\ip{u}{v}=\int_a^b u^*v\,\rho\,\dd x,\quad \norm{u}^2=\int_a^b\lvert u\rvert^2\rho\,\dd x .
+\end{equation}
+$L^2_\rho$: funciones de norma finita, identificando las que difieren en un conjunto de medida nula.
+\end{definicion}
+
+La clave es la identidad de Lagrange. Como $q$ es real, sus términos se cancelan:
+\begin{equation}\label{eq:lag}
+\rho\bigl(v^*\Lop u-u\,(\Lop v)^*\bigr)=u(pv^{*\prime})'-v^*(pu')'=\dv{}{x}\Bigl[p\,(uv^{*\prime}-v^*u')\Bigr]
+\;\Rightarrow\;
+\ip{v}{\Lop u}-\ip{\Lop v}{u}=\Bigl[p\,(uv^{*\prime}-v^*u')\Bigr]_a^b .
+\end{equation}
+Si el término de borde se anula (condiciones separadas, periódicas o singulares), $\Lop$ es \emph{simétrico}.
+
+\begin{teorema}[Consecuencias de la simetría]
+\begin{align}
+\lambda\ip{y}{y}&=\ip{y}{\Lop y}=\ip{\Lop y}{y}=\lambda^*\ip{y}{y}&&\Rightarrow\ \lambda\in\R,\\
+(\lambda_n-\lambda_m)\ip{y_m}{y_n}&=\ip{y_m}{\Lop y_n}-\ip{\Lop y_m}{y_n}=0&&\Rightarrow\ \ip{y_m}{y_n}=0\ \ (\lambda_n\neq\lambda_m),\\
+f&=\sum_n c_n\,y_n,\quad c_n=\frac{\ip{y_n}{f}}{\norm{y_n}^2}&&\text{(base completa; $\hat{\bm e}_i\cdot\hat{\bm e}_j=\delta_{ij}$)}.
+\end{align}
+\end{teorema}
+
+% =====================================================================
+\section{Ecuación de Hermite}
+% =====================================================================
+\begin{definicion}[Ecuación de Hermite]
+$y''-2xy'+2\alpha y=0$, $\ x\in\R$, $\ \lambda=2\alpha$.
+\end{definicion}
+
+Usando $y''+Py'=\frac1\rho(\rho y')'$ con $\rho=\e^{\int P}$ y $P=-2x$:
+\begin{equation}
+-\e^{x^2}\bigl(\e^{-x^2}y'\bigr)'=-y''+2xy'=2\alpha y
+\quad\Longrightarrow\quad
+\rho=p=\e^{-x^2},\ \ q=0 .
+\end{equation}
+El término de borde lleva $\e^{-x^2}\to0$, así que $\Lop$ es simétrico en $\R$.
+
+\subsection{Series y cuantización}
+$x=0$ es punto regular. Buscamos $y=\sum a_nx^n$ y reindexamos el término de $y''$:
+\begin{equation}
+\sum_{n\ge0}\Bigl[(n+2)(n+1)a_{n+2}+2(\alpha-n)a_n\Bigr]x^n=0
+\;\Longrightarrow\;
+\res{a_{n+2}=\frac{2(n-\alpha)}{(n+2)(n+1)}\,a_n}
+\end{equation}
+Salen dos series, una par (generada por $a_0$) y otra impar (por $a_1$):
+\begin{align}
+y_{\mathrm{par}}&=1-\alpha x^2+\tfrac{\alpha(\alpha-2)}{6}x^4+\dots,&
+y_{\mathrm{impar}}&=x+\tfrac{1-\alpha}{3}x^3+\tfrac{(3-\alpha)(1-\alpha)}{30}x^5+\dots
+\end{align}
+Si la serie no se corta, para $n\gg1$ se tiene $a_{n+2}/a_n\simeq2/n$, igual que en $\e^{x^2}=\sum x^{2k}/k!$. Entonces
+\begin{equation}
+y\sim\e^{x^2}\;\Rightarrow\;\norm{y}^2\sim\int^\infty\e^{2x^2}\e^{-x^2}\dd x=\infty
+\;\Rightarrow\;
+\res{a_{n+2}=0\iff\alpha=n\in\N,\quad \lambda_n=2n}
+\end{equation}
+Si $n$ es par se corta $y_{\mathrm{par}}$ ($a_1=0$); si es impar, $y_{\mathrm{impar}}$ ($a_0=0$).
+Normalizando el coeficiente director a $2^n$:
+\begin{equation}
+H_n=\sum_{k=0}^{\lfloor n/2\rfloor}\frac{(-1)^kn!}{k!(n-2k)!}(2x)^{n-2k}:\quad
+H_0=1,\ \ H_1=2x,\ \ H_2=4x^2-2,\ \ H_3=8x^3-12x .
+\end{equation}
+
+\subsection{Oscilador armónico cuántico}
+\begin{minipage}[c]{0.52\linewidth}
+Con $\xi=\sqrt{m\omega/\hbar}\,x$, $\varepsilon=2E/\hbar\omega$ y $\psi=h\,\e^{-\xi^2/2}$:
+\[
+\psi''+(\varepsilon-\xi^2)\psi=0\;\Rightarrow\;h''-2\xi h'+(\varepsilon-1)h=0 .
+\]
+Es Hermite con $2\alpha=\varepsilon-1$. Exigir que $\psi$ sea normalizable cuantiza la energía:
+\[
+\res{E_n=\hbar\omega\bigl(n+\tfrac12\bigr)}\qquad \psi_n\propto H_n(\xi)\,\e^{-\xi^2/2}.
+\]
+\end{minipage}\hfill
+\begin{minipage}[c]{0.44\linewidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[oscuro, width=\linewidth, height=0.78\linewidth,
+  xmin=-4.4, xmax=4.4, ymin=-0.1, ymax=5.1, axis lines=left,
+  xtick=\empty, ytick={0.5,1.5,2.5,3.5,4.5},
+  yticklabels={$\frac12$,$\frac32$,$\frac52$,$\frac72$,$\frac92$},
+  ylabel={$E/\hbar\omega$}, xlabel={$\xi$},
+  y label style={at={(axis description cs:0,1)},anchor=south,rotate=-90},
+  x label style={at={(axis description cs:1,0)},anchor=north west}]
+  \addplot[sky, line width=0.6pt, samples=100, domain=-3.2:3.2] {x^2/2};
+  \curvaHermite{0}{c0}{1}
+  \curvaHermite{1}{c1}{2*x}
+  \curvaHermite{2}{c2}{4*x^2-2}
+  \curvaHermite{3}{c3}{8*x^3-12*x}
+  \curvaHermite{4}{c4}{16*x^4-48*x^2+12}
+\end{axis}
+\end{tikzpicture}
+\end{minipage}
+
+% =====================================================================
+\section{Rodrigues y ortogonalidad}
+% =====================================================================
+\begin{teorema}[Fórmula de Rodrigues]
+\begin{equation}\label{eq:rod}
+\res{H_n=(-1)^n\,\e^{x^2}\dvn{}{x}{n}\e^{-x^2}}
+\end{equation}
+\end{teorema}
+
+\begin{demostracion}
+Sea $w=\e^{-x^2}$. Derivamos $n+1$ veces $w'+2xw=0$ con Leibniz y llamamos $u=w^{(n)}=(-1)^n\e^{-x^2}H$:
+\begin{align*}
+&w^{(n+2)}+2x\,w^{(n+1)}+2(n+1)\,w^{(n)}=0\;\equiv\;u''+2xu'+2(n+1)u=0,\\
+&u'=(-1)^n\e^{-x^2}(H'-2xH),\qquad u''=(-1)^n\e^{-x^2}\bigl(H''-4xH'+(4x^2-2)H\bigr),\\
+&\Rightarrow\ H''-2xH'+2nH=0,\qquad H=2^nx^n+\dots\ \Rightarrow\ H=H_n .
+\end{align*}
+\end{demostracion}
+
+\begin{teorema}[Ortogonalidad]
+\begin{equation}\label{eq:ort}
+\res{\ip{H_n}{H_m}=\int_{-\infty}^{\infty}H_nH_m\,\e^{-x^2}\dd x=2^n\,n!\,\sqrt\pi\;\delta_{nm}}
+\end{equation}
+\end{teorema}
+
+\begin{demostracion}
+Tomamos $m\le n$ e integramos por partes $n$ veces (los bordes llevan $\e^{-x^2}\to0$):
+\[
+\ip{H_m}{H_n}\overset{\eqref{eq:rod}}{=}(-1)^n\!\int H_m\,w^{(n)}\dd x=\int H_m^{(n)}\,\e^{-x^2}\dd x=
+\begin{cases}0,& m<n\ \ (H_m^{(n)}\equiv0),\\[2pt] 2^n n!\sqrt\pi,& m=n\ \ (H_n^{(n)}=2^nn!).\end{cases}
+\]
+\end{demostracion}
+
+Además, $\e^{2xt-t^2}=\e^{x^2}\e^{-(x-t)^2}=\sum_n H_n\,t^n/n!$ (función generatriz).
+
+% =====================================================================
+\section{Operadores escalera}
+% =====================================================================
+Factorizamos el operador: $\Am=\dv{}{x}$, $\ \Ap=-\dv{}{x}+2x$, de modo que
+$\Ap\Am y_\alpha=-y_\alpha''+2xy_\alpha'=2\alpha\,y_\alpha$.
+
+\begin{proposicion}[Conmutador]
+\begin{equation}
+[\Am,\Ap]\,y=\dv{}{x}\bigl(-y'+2xy\bigr)-\Bigl(-\dv{}{x}+2x\Bigr)y'=2y
+\;\Longrightarrow\;
+\res{[\Am,\Ap]=2}
+\end{equation}
+\end{proposicion}
+
+Con esto, $\Ap$ sube un nivel y $\Am$ lo baja:
+\begin{align}
+\Ap\Am(\Ap y_\alpha)&=\Ap(\Ap\Am+2)\,y_\alpha=2(\alpha+1)\,\Ap y_\alpha,\\
+\Ap\Am(\Am y_\alpha)&=(\Am\Ap-2)\,\Am y_\alpha=2(\alpha-1)\,\Am y_\alpha .
+\end{align}
+Como $\Ap=\Am^\dagger$ en $L^2_\rho$, el espectro está acotado inferiormente,
+$2\alpha\norm{y}^2=\norm{y'}^2\ge0$, y la escalera termina en $H_0$ ($\Am H_0=0$). Sobre los $H_n$:
+\begin{equation}
+\res{\Ap H_n=H_{n+1},\qquad \Am H_n=2n\,H_{n-1}}
+\qquad\Rightarrow\qquad H_{n+1}=2xH_n-2nH_{n-1}.
+\end{equation}
+
+\begin{observacion}[Mecánica cuántica]
+Al conjugar con $\e^{\xi^2/2}$, $\Am\mapsto\xi+\pd_\xi=\sqrt2\,a$ y $\Ap\mapsto\xi-\pd_\xi=\sqrt2\,a^\dagger$.
+Entonces $[a,a^\dagger]=1$ y $\hat H=\hbar\omega\bigl(a^\dagger a+\tfrac12\bigr)$.
+\end{observacion}
+
+\end{document}

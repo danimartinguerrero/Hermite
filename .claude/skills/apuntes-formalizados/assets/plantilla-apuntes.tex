@@ -1,0 +1,80 @@
+% !TeX program = lualatex
+% Plantilla: APUNTES formalizados completos (skill «apuntes-formalizados»)
+\documentclass[11pt,a4paper,twoside]{article}
+
+% ---------- Datos editables ------------------------------------------
+\newcommand{\autor}{Autor}
+\newcommand{\asignatura}{Asignatura}
+\newcommand{\titulocorto}{Título corto}
+\newcommand{\curso}{Salamanca, curso 2026/2027}
+
+\usepackage[apuntes]{apuntes-oscuro}
+\hypersetup{pdftitle={Título}, pdfauthor={\autor}}
+
+% Notación propia del tema
+% \newcommand{\Lop}{\mathcal{L}}
+
+\begin{document}
+
+% ------------------------------ Portada ------------------------------
+\begin{titlepage}
+\newgeometry{top=2.2cm,bottom=2.2cm,left=2.6cm,right=2.6cm}
+\centering
+{\Large\scshape Universidad de Salamanca\par}
+\vspace{0.9cm}
+{\color{fg}\rule{\linewidth}{0.4pt}}\par\vspace{0.45cm}
+{\small\color{muted}\scshape Facultad de Ciencias \quad$\cdot$\quad Grado en Física\par}
+\vspace{1.4cm}
+{\color{acc}\scshape \asignatura\par}
+\vspace{0.15cm}
+{\small\color{muted}\scshape Tema N\par}
+\vspace{1.0cm}
+{\fontsize{24}{30}\selectfont\bfseries Título del tema\\[2pt] segunda línea\par}
+\vspace{0.7cm}
+{\color{fg}\rule{0.2\linewidth}{0.4pt}}\par\vspace{0.4cm}
+{\small\itshape Subtema $\cdot$ Subtema $\cdot$ Subtema\par}
+\vspace{0.8cm}
+% Figura de portada (tikz/pgfplots, estilo «oscuro», sin solapes)
+\vspace{0.5cm}
+{\small $\displaystyle \text{dos o tres fórmulas clave}$\par}
+\vfill
+{\color{fg}\rule{\linewidth}{0.4pt}}\par\vspace{0.3cm}
+\begin{minipage}[t]{0.32\linewidth}\raggedright
+{\scriptsize\color{acc}\scshape Autor}\\[2pt]{\small\autor}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.32\linewidth}\centering
+{\scriptsize\color{acc}\scshape Asignatura}\\[2pt]{\small\asignatura}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.32\linewidth}\raggedleft
+{\scriptsize\color{acc}\scshape Apuntes formalizados}\\[2pt]{\small\curso}
+\end{minipage}
+\restoregeometry
+\end{titlepage}
+
+\setcounter{page}{2}
+{\hypersetup{linkcolor=fg}\tableofcontents}
+
+\section{Primera sección}
+\subsection{Primera subsección}
+
+\begin{definicion}[Nombre]
+\begin{equation}
+a\defeq b .
+\end{equation}
+\end{definicion}
+
+\begin{proposicion}[Nombre]
+$a=b$.
+\end{proposicion}
+
+\begin{demostracion}
+\begin{enumerate}
+\item \emph{Paso}: \dots
+\end{enumerate}
+\end{demostracion}
+
+\begin{observacion}[Notación]
+En el manuscrito \dots; con \dots{} resulta \dots
+\end{observacion}
+
+\end{document}

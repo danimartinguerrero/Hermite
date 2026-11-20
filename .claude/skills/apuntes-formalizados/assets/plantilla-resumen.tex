@@ -1,0 +1,38 @@
+% !TeX program = lualatex
+% Plantilla: RESUMEN formalizado (skill «apuntes-formalizados»)
+\documentclass[10pt,a4paper]{article}
+
+\newcommand{\autor}{Autor}
+\newcommand{\titulocorto}{Tema $\cdot$ Resumen}
+
+\usepackage[resumen]{apuntes-oscuro}
+\hypersetup{pdftitle={Tema. Resumen}, pdfauthor={\autor}}
+
+% Notación propia del tema
+% \newcommand{\Lop}{\mathcal{L}}
+
+\begin{document}
+\thispagestyle{empty}
+\titular{Título del tema}{Resumen}{desarrollos simbólicos}
+{\small\color{muted}\autor\hfill Notación: $y'\equiv\dd y/\dd x$.}
+
+\section{Primera sección}
+Partimos de \dots{} y separamos \dots:
+\begin{equation}
+a=b\;\Longrightarrow\;\res{c=d}
+\end{equation}
+
+\begin{teorema}[Nombre]
+\begin{equation}\label{eq:clave}
+\res{f=g}
+\end{equation}
+\end{teorema}
+
+\begin{demostracion}
+\begin{enumerate}
+\item \emph{Paso}: $a=b$.
+\item Sustituyendo: $b\overset{\eqref{eq:clave}}{=}c$.
+\end{enumerate}
+\end{demostracion}
+
+\end{document}

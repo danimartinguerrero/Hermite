@@ -11,165 +11,23 @@
 \newcommand{\titulodoc}{Operador de Sturm--Liouville y ecuación de Hermite}
 \newcommand{\titulocorto}{Sturm--Liouville y Hermite}
 
-% ---------- Paquetes --------------------------------------------------
-\usepackage[spanish,es-noshorthands,es-nolists,es-tabla,es-lcroman]{babel}
-\usepackage{fontspec}
-\usepackage{amsmath,amssymb,mathtools,bm,esint}
-\usepackage[a4paper,top=2.9cm,bottom=2.7cm,left=2.6cm,right=2.6cm,
-            headsep=1.0cm,headheight=14pt]{geometry}
-\usepackage{xcolor}
-\usepackage{fancyhdr}
-\usepackage{titlesec}
-\usepackage{enumitem}
-\usepackage[most]{tcolorbox}
-\usepackage{multicol}
-\usepackage{booktabs,array}
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,calc,positioning,decorations.pathreplacing}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.18}
-\usepgfplotslibrary{fillbetween}
-\usepackage{caption}
-\usepackage{xparse}
-\usepackage{hyperref}
+% ---------- Estilo común (skill «apuntes-formalizados») ----------------
+\usepackage[apuntes]{apuntes-oscuro}
+\hypersetup{pdftitle={\titulodoc}, pdfauthor={\autor},
+            pdfsubject={Sturm--Liouville, Hermite}}
 
-% ---------- Paleta ----------------------------------------------------
-\definecolor{bg}{HTML}{000000}
-\definecolor{fg}{HTML}{ECECEC}
-\definecolor{boxbg}{HTML}{0E1014}
-\definecolor{acc}{HTML}{5AA9E6}
-\definecolor{accdim}{HTML}{3D7198}
-\definecolor{lav}{HTML}{8FA3D6}
-\definecolor{gold}{HTML}{D6B25E}
-\definecolor{muted}{HTML}{9CA0A8}
-\definecolor{rulec}{HTML}{2E3036}
-\definecolor{sky}{HTML}{B7CCE8}
-% gradiente de niveles
-\definecolor{c0}{HTML}{4F7FE0}
-\definecolor{c1}{HTML}{3FC1C9}
-\definecolor{c2}{HTML}{8FD14F}
-\definecolor{c3}{HTML}{E6C24A}
-\definecolor{c4}{HTML}{F08A3C}
-\definecolor{c5}{HTML}{E0452F}
-
-\pagecolor{bg}
-\AtBeginDocument{\color{fg}}
-
-\hypersetup{
-  colorlinks=true, linkcolor=acc, urlcolor=acc, citecolor=acc,
-  pdftitle={\titulodoc}, pdfauthor={\autor},
-  pdfsubject={Sturm--Liouville, Hermite}
-}
-
-% ---------- Cabeceras -------------------------------------------------
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[LO]{\normalfont\small\color{muted}\textsc{\titulocorto}}
-\fancyhead[RO]{\normalfont\small\color{muted}\thepage}
-\fancyhead[LE]{\normalfont\small\color{muted}\thepage}
-\fancyhead[RE]{\normalfont\small\color{muted}\textsc{Apuntes formalizados}}
-\makeatletter
-\renewcommand{\headrule}{{\color{rulec}\hrule\@height0.4pt\@width\headwidth\vskip-0.4pt}}
-\makeatother
-\renewcommand{\footrulewidth}{0pt}
-
-% ---------- Secciones -------------------------------------------------
-\titleformat{\section}{\Large\bfseries}{\color{acc}\thesection}{0.9em}{}
-  [\vspace{-0.4ex}{\color{rulec}\titlerule[0.6pt]}]
-\titleformat{\subsection}{\large\bfseries}{\color{acc}\thesubsection}{0.9em}{}
-\titlespacing*{\section}{0pt}{3.2ex plus 1ex}{2.2ex}
-\titlespacing*{\subsection}{0pt}{2.6ex plus 1ex}{1.4ex}
-\numberwithin{equation}{section}
-
-\setlist[enumerate]{label=\textcolor{acc}{\arabic*.},leftmargin=1.8em,itemsep=0.35ex}
-\setlist[itemize]{label=\textcolor{acc}{\scriptsize$\blacktriangleright$},leftmargin=1.6em,itemsep=0.3ex}
-
-\DeclareCaptionFont{mutedc}{\color{muted}}
-\DeclareCaptionFont{accc}{\color{acc}}
-\captionsetup{font={small,mutedc},labelfont={sc,accc},labelsep=period,
-              justification=justified,margin=1.2cm}
-
-% ---------- Entornos formalizados --------------------------------------
-\newcounter{thm}[section]
-\renewcommand{\thethm}{\thesection.\arabic{thm}}
-
-\tcbset{
-  thmbox/.style={enhanced, breakable,
-    colback=boxbg, colframe=#1, coltext=fg, boxrule=0.5pt, arc=1.2pt,
-    left=4mm, right=4mm, top=4.2mm, bottom=3mm,
-    before skip=3.2ex, after skip=2.6ex,
-    attach boxed title to top left={xshift=4mm,yshift*=-\tcboxedtitleheight/2},
-    boxed title style={colback=boxbg, colframe=#1, boxrule=0.5pt, arc=1.2pt,
-                       left=2mm,right=2mm,top=0.6mm,bottom=0.6mm},
-    coltitle=#1, fonttitle=\normalfont},
-}
-
-\NewDocumentEnvironment{definicion}{o}
- {\refstepcounter{thm}\begin{tcolorbox}[thmbox=acc,
-   title={\textsc{Definición \thethm}\IfValueT{#1}{\ \textit{(#1)}}}]}
- {\end{tcolorbox}}
-\NewDocumentEnvironment{proposicion}{o}
- {\refstepcounter{thm}\begin{tcolorbox}[thmbox=lav,
-   title={\textsc{Proposición \thethm}\IfValueT{#1}{\ \textit{(#1)}}}]\itshape}
- {\end{tcolorbox}}
-\NewDocumentEnvironment{corolario}{o}
- {\refstepcounter{thm}\begin{tcolorbox}[thmbox=lav,
-   title={\textsc{Corolario \thethm}\IfValueT{#1}{\ \textit{(#1)}}}]\itshape}
- {\end{tcolorbox}}
-\NewDocumentEnvironment{teorema}{o}
- {\refstepcounter{thm}\begin{tcolorbox}[thmbox=gold,
-   title={\textsc{Teorema \thethm}\IfValueT{#1}{\ \textit{(#1)}}}]\itshape}
- {\end{tcolorbox}}
-
-\NewDocumentEnvironment{observacion}{o}
- {\par\smallskip\refstepcounter{thm}\noindent
-  {\color{lav}\bfseries\itshape Observación \thethm}%
-  \IfValueT{#1}{\ {\color{muted}(#1)}}.\ }
- {\par\smallskip}
-\NewDocumentEnvironment{ejemplo}{o}
- {\par\smallskip\refstepcounter{thm}\noindent
-  {\color{acc}\bfseries Ejemplo \thethm}%
-  \IfValueT{#1}{\ {\color{muted}(#1)}}.\ }
- {\par\smallskip}
-\NewDocumentEnvironment{demostracion}{o}
- {\par\smallskip\noindent{\bfseries\itshape Demostración}%
-  \IfValueT{#1}{\ \textit{#1}}.\ }
- {\hfill{\color{muted}$\square$}\par\smallskip}
-
-\newtcolorbox{metodo}[1]{enhanced, breakable, colback=boxbg, coltext=fg,
-  frame hidden, sharp corners, borderline west={2.2pt}{0pt}{acc},
-  left=5mm, right=4mm, top=2.5mm, bottom=2.5mm, before skip=2.6ex, after skip=2.6ex,
-  before upper={{\color{acc}\textsc{Método: #1.}}\par\smallskip}}
-
-% resaltado de resultados
-\newcommand{\res}[1]{\tcbhighmath[colback=boxbg,colframe=acc,colupper=fg,boxrule=0.5pt,arc=1pt,
-  left=1.5mm,right=1.5mm,top=1mm,bottom=1mm]{#1}}
-
-% ---------- Notación --------------------------------------------------
-\newcommand{\dd}{\mathrm{d}}
-\newcommand{\dv}[2]{\frac{\dd #1}{\dd #2}}
-\newcommand{\dvn}[3]{\frac{\dd^{#3} #1}{\dd #2^{#3}}}
-\newcommand{\pd}{\partial}
+% ---------- Notación propia del documento ------------------------------
 \newcommand{\Lop}{\mathcal{L}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\C}{\mathbb{C}}
-\newcommand{\N}{\mathbb{N}}
-\newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Ap}{A_{+}}
 \newcommand{\Am}{A_{-}}
-\newcommand{\ip}[2]{\left(#1,#2\right)}
-\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
 \newcommand{\Ltwo}{L^{2}_{\rho}}
-\newcommand{\defeq}{\stackrel{\mathrm{def}}{=}}
-\newcommand{\e}{\mathrm{e}}
-\newcommand{\iu}{\mathrm{i}}
 
 % ---------- Figura: oscilador armónico --------------------------------
 % \oscilador{anchura}{ejes? (true/false)}
 \newcommand{\curvaHermite}[3]{% n, color, expresión de H_n
   \addplot[name path=lvl#1, draw=none, domain=-4.6:4.6] {#1+0.5};
   \addplot[name path=psi#1, #2, line width=0.9pt, samples=220, domain=-4.6:4.6]
-     {#1+0.5+0.95*\csname N#1\endcsname*(#3)*exp(-x^2/2)};
+     {#1+0.5+0.6*\csname N#1\endcsname*(#3)*exp(-x^2/2)};
   \addplot[#2, fill opacity=0.16] fill between[of=psi#1 and lvl#1];
   \draw[#2, opacity=0.35, line width=0.3pt]
      (axis cs:{-sqrt(2*#1+1)},#1+0.5) -- (axis cs:{sqrt(2*#1+1)},#1+0.5);
@@ -192,7 +50,7 @@
   yticklabels={$\tfrac12$,$\tfrac32$,$\tfrac52$,$\tfrac72$,$\tfrac92$,$\tfrac{11}{2}$},
   xlabel={\color{muted}$\xi$}, ylabel={\color{muted}$E/\hbar\omega$},
   x label style={at={(axis description cs:1.0,0.0)},anchor=north west},
-  y label style={at={(axis description cs:0.5,1.0)},anchor=south,rotate=-90},
+  y label style={at={(axis description cs:0,1.0)},anchor=south,rotate=-90},
   clip=true]
   \addplot[sky, line width=0.7pt, samples=120, domain=-3.6:3.6] {x^2/2};
   \curvaHermite{0}{c0}{1}
@@ -204,8 +62,6 @@
 \end{axis}
 \end{tikzpicture}}
 
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{0.55ex}
 
 % =====================================================================
 \begin{document}
@@ -842,13 +698,8 @@ a^\dagger a=\tfrac12\Bigl(\xi^2-\dvn{}{\xi}{2}-1\Bigr),\notag\\
 \clearpage
 \section{Formulario}
 % =====================================================================
-\newcommand{\fh}[1]{\par\smallskip{\sffamily\bfseries\color{acc}#1}\ \ }
-\newcommand{\fhl}[1]{\par\smallskip{\sffamily\bfseries\color{lav}#1}\ \ }
-\newcommand{\fhg}[1]{\par\smallskip{\sffamily\bfseries\color{gold}#1}\ \ }
 {\footnotesize
 \setlength{\columnsep}{1.4em}
-\setlength{\columnseprule}{0.4pt}
-\renewcommand{\columnseprulecolor}{\color{rulec}}
 \setlength{\parskip}{0.35ex}
 \begin{multicols}{2}
 \fh{Separación} $y=X(x)T(t)$ en $k\,\pd_t^2y=\pd_x(u\pd_xy)-My$:

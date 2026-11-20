@@ -1,0 +1,207 @@
+% =====================================================================
+%  apuntes-oscuro.sty — estilo oscuro de los apuntes formalizados
+%  (Mecánica I · Sturm–Liouville y Hermite). Compilar con LuaLaTeX.
+%
+%  Opciones:  apuntes (por defecto) · resumen · formulario
+% =====================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{apuntes-oscuro}[2026/11/20 Estilo oscuro de apuntes formalizados]
+
+\newif\ifao@resumen
+\newif\ifao@formulario
+\DeclareOption{apuntes}{}
+\DeclareOption{resumen}{\ao@resumentrue}
+\DeclareOption{formulario}{\ao@formulariotrue}
+\ProcessOptions\relax
+
+% ---------- Paquetes --------------------------------------------------
+\RequirePackage[spanish,es-noshorthands,es-nolists,es-tabla,es-lcroman]{babel}
+\RequirePackage{fontspec}
+\RequirePackage{amsmath,amssymb,mathtools,bm,esint}
+\ifao@formulario
+  \RequirePackage[a4paper,margin=1.1cm,top=1.0cm,bottom=1.0cm]{geometry}
+\else\ifao@resumen
+  \RequirePackage[a4paper,top=2.3cm,bottom=2.1cm,left=2.1cm,right=2.1cm,
+                  headsep=0.8cm,headheight=14pt]{geometry}
+\else
+  \RequirePackage[a4paper,top=2.9cm,bottom=2.7cm,left=2.6cm,right=2.6cm,
+                  headsep=1.0cm,headheight=14pt]{geometry}
+\fi\fi
+\RequirePackage{xcolor}
+\RequirePackage{fancyhdr}
+\RequirePackage{titlesec}
+\RequirePackage{enumitem}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{multicol}
+\RequirePackage{booktabs,array}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning,decorations.pathreplacing}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{fillbetween}
+\RequirePackage{caption}
+\RequirePackage{xparse}
+\RequirePackage{hyperref}
+
+% ---------- Paleta ----------------------------------------------------
+\definecolor{bg}{HTML}{000000}      % página
+\definecolor{fg}{HTML}{ECECEC}      % texto
+\definecolor{boxbg}{HTML}{0E1014}   % fondo de cajas
+\definecolor{acc}{HTML}{5AA9E6}     % azul: números, definiciones, enlaces
+\definecolor{accdim}{HTML}{3D7198}
+\definecolor{lav}{HTML}{8FA3D6}     % lavanda: proposiciones, observaciones
+\definecolor{gold}{HTML}{D6B25E}    % dorado: teoremas
+\definecolor{muted}{HTML}{9CA0A8}   % gris: cabeceras, pies, ejes
+\definecolor{rulec}{HTML}{2E3036}   % filetes
+\definecolor{sky}{HTML}{B7CCE8}     % azul claro: curvas auxiliares
+% gradiente para familias de curvas (n = 0,…,5)
+\definecolor{c0}{HTML}{4F7FE0}
+\definecolor{c1}{HTML}{3FC1C9}
+\definecolor{c2}{HTML}{8FD14F}
+\definecolor{c3}{HTML}{E6C24A}
+\definecolor{c4}{HTML}{F08A3C}
+\definecolor{c5}{HTML}{E0452F}
+
+\pagecolor{bg}
+\AtBeginDocument{\color{fg}}
+\hypersetup{colorlinks=true, linkcolor=acc, urlcolor=acc, citecolor=acc}
+
+% ---------- Cabeceras -------------------------------------------------
+\providecommand{\titulocorto}{}
+\providecommand{\cabeceraderecha}{Apuntes formalizados}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LO]{\normalfont\small\color{muted}\textsc{\titulocorto}}
+\fancyhead[RO]{\normalfont\small\color{muted}\thepage}
+\fancyhead[LE]{\normalfont\small\color{muted}\thepage}
+\fancyhead[RE]{\normalfont\small\color{muted}\textsc{\cabeceraderecha}}
+\renewcommand{\headrule}{{\color{rulec}\hrule height0.4pt width\headwidth\vskip-0.4pt}}
+\renewcommand{\footrulewidth}{0pt}
+\ifao@formulario\pagestyle{empty}\fi
+
+% ---------- Secciones -------------------------------------------------
+\ifao@formulario
+  \titleformat{\section}{\normalsize\sffamily\bfseries\color{acc}}{\thesection\ \ $\cdot$}{0.4em}{}
+    [\vspace{-0.6ex}{\color{acc}\titlerule[0.4pt]}]
+  \titlespacing*{\section}{0pt}{1.2ex}{0.6ex}
+\else
+  \titleformat{\section}{\Large\bfseries}{\color{acc}\thesection}{0.9em}{}
+    [\vspace{-0.4ex}{\color{rulec}\titlerule[0.6pt]}]
+  \titleformat{\subsection}{\large\bfseries}{\color{acc}\thesubsection}{0.9em}{}
+  \ifao@resumen
+    \titlespacing*{\section}{0pt}{2.4ex plus 1ex}{1.4ex}
+    \titlespacing*{\subsection}{0pt}{1.8ex plus 0.6ex}{1.0ex}
+  \else
+    \titlespacing*{\section}{0pt}{3.2ex plus 1ex}{2.2ex}
+    \titlespacing*{\subsection}{0pt}{2.6ex plus 1ex}{1.4ex}
+  \fi
+\fi
+\numberwithin{equation}{section}
+
+\setlist[enumerate]{label=\textcolor{acc}{\arabic*.},leftmargin=1.8em,itemsep=0.35ex}
+\setlist[itemize]{label=\textcolor{acc}{\scriptsize$\blacktriangleright$},leftmargin=1.6em,itemsep=0.3ex}
+
+\DeclareCaptionFont{mutedc}{\color{muted}}
+\DeclareCaptionFont{accc}{\color{acc}}
+\captionsetup{font={small,mutedc},labelfont={sc,accc},labelsep=period,
+              justification=justified,margin=1.2cm}
+
+% ---------- Entornos formalizados --------------------------------------
+% Un único contador compartido (Definición 1.1, Observación 1.2, …)
+\newcounter{thm}[section]
+\renewcommand{\thethm}{\thesection.\arabic{thm}}
+
+\ifao@resumen
+  \def\ao@boxskip{2.2ex}\def\ao@boxtop{3.6mm}
+\else
+  \def\ao@boxskip{3.2ex}\def\ao@boxtop{4.2mm}
+\fi
+\tcbset{
+  thmbox/.style={enhanced, breakable,
+    colback=boxbg, colframe=#1, coltext=fg, boxrule=0.5pt, arc=1.2pt,
+    left=4mm, right=4mm, top=\ao@boxtop, bottom=2.6mm,
+    before skip=\ao@boxskip, after skip=2.2ex,
+    attach boxed title to top left={xshift=4mm,yshift*=-\tcboxedtitleheight/2},
+    boxed title style={colback=boxbg, colframe=#1, boxrule=0.5pt, arc=1.2pt,
+                       left=2mm,right=2mm,top=0.6mm,bottom=0.6mm},
+    coltitle=#1, fonttitle=\normalfont},
+}
+
+% \ao@caja{entorno}{Nombre}{color}{fuente del cuerpo}
+\NewDocumentCommand{\ao@caja}{mmmm}{%
+  \NewDocumentEnvironment{#1}{o}
+   {\refstepcounter{thm}\begin{tcolorbox}[thmbox=#3,
+     title={\textsc{#2 \thethm}\IfValueT{##1}{\ \textit{(##1)}}}]#4}
+   {\end{tcolorbox}}}
+\ao@caja{definicion}{Definición}{acc}{}
+\ao@caja{proposicion}{Proposición}{lav}{\itshape}
+\ao@caja{lema}{Lema}{lav}{\itshape}
+\ao@caja{corolario}{Corolario}{lav}{\itshape}
+\ao@caja{teorema}{Teorema}{gold}{\itshape}
+
+\NewDocumentEnvironment{observacion}{o}
+ {\par\smallskip\refstepcounter{thm}\noindent
+  {\color{lav}\bfseries\itshape Observación \thethm}%
+  \IfValueT{#1}{\ {\color{muted}(#1)}}.\ }
+ {\par\smallskip}
+\NewDocumentEnvironment{ejemplo}{o}
+ {\par\smallskip\refstepcounter{thm}\noindent
+  {\color{acc}\bfseries Ejemplo \thethm}%
+  \IfValueT{#1}{\ {\color{muted}(#1)}}.\ }
+ {\par\smallskip}
+\NewDocumentEnvironment{demostracion}{o}
+ {\par\smallskip\noindent{\bfseries\itshape Demostración}%
+  \IfValueT{#1}{\ \textit{#1}}.\ }
+ {\hfill{\color{muted}$\square$}\par\smallskip}
+
+\newtcolorbox{metodo}[1]{enhanced, breakable, colback=boxbg, coltext=fg,
+  frame hidden, sharp corners, borderline west={2.2pt}{0pt}{acc},
+  left=5mm, right=4mm, top=2.5mm, bottom=2.5mm, before skip=2.4ex, after skip=2.4ex,
+  before upper={{\color{acc}\textsc{Método: #1.}}\par\smallskip}}
+
+% resultado destacado dentro de una ecuación: \res{...}
+\newcommand{\res}[1]{\tcbhighmath[colback=boxbg,colframe=acc,colupper=fg,
+  boxrule=0.5pt,arc=1pt,left=1.5mm,right=1.5mm,top=1mm,bottom=1mm]{#1}}
+
+% ---------- Cabecera de resumen / formulario --------------------------
+% \titular{Título}{Etiqueta}{subtítulo}
+\newcommand{\titular}[3]{%
+  \begin{center}
+  {\Large\bfseries #1}\quad{\color{muted}$\cdot$}\quad{\Large\bfseries #2}\quad
+  {\large\color{muted}#3}
+  \end{center}\vspace{-1.2ex}
+  {\color{rulec}\rule{\linewidth}{0.4pt}}\par\vspace{0.6ex}}
+
+% encabezados en línea del formulario (azul, lavanda, dorado)
+\newcommand{\fh}[1]{\par\smallskip{\sffamily\bfseries\color{acc}#1}\ \ }
+\newcommand{\fhl}[1]{\par\smallskip{\sffamily\bfseries\color{lav}#1}\ \ }
+\newcommand{\fhg}[1]{\par\smallskip{\sffamily\bfseries\color{gold}#1}\ \ }
+\setlength{\columnseprule}{0.4pt}
+\renewcommand{\columnseprulecolor}{\color{rulec}}
+
+% ---------- Gráficos ---------------------------------------------------
+\pgfplotsset{oscuro/.style={
+  axis line style={muted, line width=0.4pt},
+  tick style={muted}, ticklabel style={muted, font=\scriptsize},
+  label style={muted, font=\small},
+  grid=none, legend style={draw=none, fill=none, text=muted, font=\scriptsize}}}
+
+% ---------- Notación --------------------------------------------------
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\dv}[2]{\frac{\dd #1}{\dd #2}}
+\newcommand{\dvn}[3]{\frac{\dd^{#3} #1}{\dd #2^{#3}}}
+\newcommand{\pd}{\partial}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\ip}[2]{\left(#1,#2\right)}
+\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
+\newcommand{\defeq}{\stackrel{\mathrm{def}}{=}}
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\iu}{\mathrm{i}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55ex}
+
+\endinput
